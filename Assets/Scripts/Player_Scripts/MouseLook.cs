@@ -1,28 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////
-//  Project:    Depth Protocol
-//  Script:     MouseLook.cs
-//
-//  Author:     Izaiah Razon
-//  Created:    2026-04-13
-//  Updated:    2026-04-13
-//
-//  Description:
-//  Handles mouse-based camera rotation with visual camera tilt.
-//  Tilt does not affect movement direction.
-//
-//  Notes:
-//  - Pitch is clamped to prevent disorientation
-//  - Roll tilt is applied when strafing
-//  - Extra visual pitch tilt is applied when moving forward/backward
-//
-//  Dependencies:
-//  - Requires reference to player body transform
-//  - Requires reference to orientation transform
-//
-//  Unity Version: 2022+
-//
-///////////////////////////////////////////////////////////////////////////////
-
 using UnityEngine;
 
 public class MouseLook : MonoBehaviour
@@ -42,14 +17,19 @@ public class MouseLook : MonoBehaviour
     [SerializeField] private float tiltSpeed = 5f;
 
     [Header("Sprint FOV Settings")]
-    private Camera playerCamera;
     [SerializeField] private float normalFOV = 60f;
     [SerializeField] private float sprintFOV = 68f;
     [SerializeField] private float fovLerpSpeed = 6f;
 
+    [Header("Interaction Look Lock")]
+    [SerializeField] private float interactLookLockDuration = 0.05f;
+
+    private Camera playerCamera;
     private float basePitch = 0f;
     private float currentRollTilt = 0f;
     private float currentMoveTilt = 0f;
+    private float lookLockTimer = 0f;
+
 
     private void Start()
     {
@@ -66,6 +46,17 @@ public class MouseLook : MonoBehaviour
 
     private void Update()
     {
+        if (playerBody == null || orientation == null || playerCamera == null)
+        {
+            return;
+        }
+
+        if (lookLockTimer > 0f)
+        {
+            lookLockTimer -= Time.deltaTime;
+            return;
+        }
+
         LookAround();
         HandleTilt();
         ApplyCameraRotation();
@@ -75,20 +66,19 @@ public class MouseLook : MonoBehaviour
 
     private void LookAround()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        float mouseX = Input.GetAxisRaw("Mouse X");
+        float mouseY = Input.GetAxisRaw("Mouse Y");
+
+        if (Mathf.Abs(mouseX) < 0.001f) mouseX = 0f;
+        if (Mathf.Abs(mouseY) < 0.001f) mouseY = 0f;
+
+        mouseX *= mouseSensitivity * Time.deltaTime;
+        mouseY *= mouseSensitivity * Time.deltaTime;
 
         basePitch -= mouseY;
         basePitch = Mathf.Clamp(basePitch, minPitch, maxPitch);
 
-        if (playerBody != null)
-        {
-            playerBody.Rotate(Vector3.up * mouseX);
-        }
-        else
-        {
-            Debug.LogWarning("MouseLook: Player Body reference is missing.");
-        }
+        playerBody.Rotate(Vector3.up * mouseX);
     }
 
     private void HandleTilt()
@@ -97,9 +87,6 @@ public class MouseLook : MonoBehaviour
         float verticalInput = Input.GetAxisRaw("Vertical");
 
         float targetRollTilt = -horizontalInput * maxStrafeTiltAngle;
-
-        // W = slight downward camera tilt
-        // S = slight upward camera tilt
         float targetMoveTilt = verticalInput * maxMoveTiltAngle;
 
         currentRollTilt = Mathf.Lerp(currentRollTilt, targetRollTilt, tiltSpeed * Time.deltaTime);
@@ -114,24 +101,11 @@ public class MouseLook : MonoBehaviour
 
     private void UpdateOrientation()
     {
-        if (orientation != null && playerBody != null)
-        {
-            orientation.rotation = Quaternion.Euler(basePitch, playerBody.eulerAngles.y, 0f);
-        }
-        else
-        {
-            Debug.LogWarning("MouseLook: Orientation reference is missing.");
-        }
+        orientation.rotation = Quaternion.Euler(basePitch, playerBody.eulerAngles.y, 0f);
     }
 
     private void HandleSprintFOV()
     {
-        if (playerCamera == null)
-        {
-            Debug.LogWarning("MouseLook: Player Camera reference is missing.");
-            return;
-        }
-
         bool isSprintingForward = Input.GetKey(KeyCode.LeftShift) && Input.GetAxisRaw("Vertical") > 0f;
         float targetFOV = isSprintingForward ? sprintFOV : normalFOV;
 
@@ -140,5 +114,9 @@ public class MouseLook : MonoBehaviour
             targetFOV,
             fovLerpSpeed * Time.deltaTime
         );
+    }
+    public void LockLookBriefly()
+    {
+        lookLockTimer = interactLookLockDuration;
     }
 }

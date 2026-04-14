@@ -1,16 +1,38 @@
+///////////////////////////////////////////////////////////////////////////////
+//  Project:    Depth Protocol
+//  Script:     MemoryFragment.cs
+//
+//  Author:     Izaiah Razon
+//  Created:    2026-04-13
+//  Updated:    2026-04-13
+//
+//  Description:
+//  Simple interactable memory fragment.
+//  When interacted with, logs a collection message and can optionally
+//  disable itself.
+//
+//  Notes:
+//  - Inherits from InteractableBase.
+//  - Serves as the first real interactable object for testing and expansion.
+//
+///////////////////////////////////////////////////////////////////////////////
+
 using UnityEngine;
 
-public class MemoryFragment : MonoBehaviour
+public class MemoryFragment : InteractableBase
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [Header("Memory Fragment Settings")]
+    [SerializeField] private string fragmentID = "Fragment_01";
+    [SerializeField] private bool disableAfterInteraction = true;
 
-    // Update is called once per frame
-    void Update()
+    protected override void OnInteract()
     {
-        
+        Debug.Log($"Memory Fragment collected: {fragmentID}");
+
+        if (disableAfterInteraction)
+        {
+            SetCanInteract(false);
+            gameObject.SetActive(false);
+        }
     }
 }
