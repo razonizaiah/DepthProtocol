@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     private float verticalInput;
     private float worldVerticalInput;
     private bool isSprinting;
+    private bool movementEnabled = true;
 
     private Vector3 currentVelocity;
 
@@ -58,6 +59,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (!movementEnabled)
+        {
+            return;
+        }
+        
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
@@ -74,6 +80,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!movementEnabled)
+        {
+            return;
+        }
+
         MovePlayer();
     }
 
@@ -113,5 +124,16 @@ public class PlayerController : MonoBehaviour
         currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity, rate * Time.fixedDeltaTime);
 
         rb.linearVelocity = currentVelocity;
+    }
+    
+    public void SetMovementEnabled(bool isEnabled)
+    {
+        movementEnabled = isEnabled;
+
+        if (!isEnabled)
+        {
+            currentVelocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
+        }
     }
 }

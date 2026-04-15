@@ -23,10 +23,12 @@ public abstract class InteractableBase : MonoBehaviour
 {
     [Header("Interaction Settings")]
     [SerializeField] private string interactionName = "Interactable";
+    [SerializeField] private string interactionPrompt = "Press E to interact";
     [SerializeField] private bool canInteract = true;
     [SerializeField] private bool logInteraction = false;
 
     public string InteractionName => interactionName;
+    public string InteractionPrompt => interactionPrompt;
     public bool CanInteract => canInteract;
 
     public void Interact()
@@ -49,5 +51,10 @@ public abstract class InteractableBase : MonoBehaviour
     protected void SetCanInteract(bool value)
     {
         canInteract = value;
+    }
+
+    public virtual void SetHighlight(bool isHighlighted)
+    {
+        // Default: do nothing.
     }
 }

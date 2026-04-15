@@ -29,6 +29,7 @@ public class MouseLook : MonoBehaviour
     private float currentRollTilt = 0f;
     private float currentMoveTilt = 0f;
     private float lookLockTimer = 0f;
+    private bool lookEnabled = true;
 
 
     private void Start()
@@ -46,6 +47,11 @@ public class MouseLook : MonoBehaviour
 
     private void Update()
     {
+        if (!lookEnabled)
+        {
+            return;
+        }
+
         if (playerBody == null || orientation == null || playerCamera == null)
         {
             return;
@@ -118,5 +124,10 @@ public class MouseLook : MonoBehaviour
     public void LockLookBriefly()
     {
         lookLockTimer = interactLookLockDuration;
+    }
+
+    public void SetLookEnabled(bool isEnabled)
+    {
+        lookEnabled = isEnabled;
     }
 }

@@ -32,11 +32,14 @@ public class InteractionController : MonoBehaviour
     [SerializeField] private MouseLook mouseLook;
 
     private InteractableBase currentInteractable;
+    public InteractableBase CurrentInteractable => currentInteractable;
     private RaycastHit currentHit;
+    private InteractableBase lastInteractable;
 
     private void Update()
     {
         DetectInteractable();
+        UpdateHighlight();
 
         if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
         {
@@ -88,5 +91,25 @@ public class InteractionController : MonoBehaviour
             interactionRadius
         );
         Gizmos.DrawRay(cameraTransform.position, cameraTransform.forward * interactionRange);
+    }
+
+    private void UpdateHighlight()
+    {
+        if (currentInteractable == lastInteractable)
+        {
+            return;
+        }
+
+        if (lastInteractable != null)
+        {
+            lastInteractable.SetHighlight(false);
+        }
+
+        if (currentInteractable != null && currentInteractable.CanInteract)
+        {
+            currentInteractable.SetHighlight(true);
+        }
+
+        lastInteractable = currentInteractable;
     }
 }

@@ -24,15 +24,36 @@ public class MemoryFragment : InteractableBase
     [Header("Memory Fragment Settings")]
     [SerializeField] private string fragmentID = "Fragment_01";
     [SerializeField] private bool disableAfterInteraction = true;
+    [SerializeField] private GameObject highlightVisual;
+    [SerializeField] private string fragmentTitle = "Memory Fragment";
+    [SerializeField] [TextArea] private string fragmentText;
+    [SerializeField] private UIManager uiManager;
 
     protected override void OnInteract()
     {
-        Debug.Log($"Memory Fragment collected: {fragmentID}");
-
-        if (disableAfterInteraction)
+        if (uiManager == null)
         {
-            SetCanInteract(false);
-            gameObject.SetActive(false);
+            Debug.LogWarning("UIManager not assigned.");
+            return;
+        }
+
+        uiManager.ShowMemoryFragment(fragmentTitle, fragmentText, () =>
+        {
+            Debug.Log($"Memory Fragment collected: {fragmentID}");
+
+            if (disableAfterInteraction)
+            {
+                SetCanInteract(false);
+                gameObject.SetActive(false);
+            }
+        });
+    }
+
+    public override void SetHighlight(bool isHighlighted)
+    {
+        if (highlightVisual != null && CanInteract)
+        {
+            highlightVisual.SetActive(isHighlighted);
         }
     }
 }
