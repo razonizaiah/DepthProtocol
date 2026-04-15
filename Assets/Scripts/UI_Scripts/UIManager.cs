@@ -12,28 +12,32 @@
 //
 //  Notes:
 //  - Keeps UI systems modular by separating prompt logic and reticle logic.
-//  - Does not perform its own detection logic.
-//  - This script should live on a dedicated UI manager object.
+//  - Manages modal UI states such as memory fragment reading and code entry.
+//  - Freezes and restores player control during modal UI interactions.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+using System;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     [Header("Gameplay References")]
     [SerializeField] private InteractionController interactionController;
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private MouseLook mouseLook;
 
     [Header("UI References")]
     [SerializeField] private InteractionPromptUI interactionPromptUI;
     [SerializeField] private ReticleUI reticleUI;
-    [SerializeField] private PlayerController playerController;
-    [SerializeField] private MouseLook mouseLook;
     [SerializeField] private MemoryFragmentPanelUI memoryFragmentPanel;
+    [SerializeField] private CodeInputPanelUI codeInputPanel;
+
+    private bool isModalUIOpen = false;
 
     private void Update()
     {
-        if (interactionController == null)
+        if (interactionController == null || isModalUIOpen)
         {
             return;
         }
@@ -52,51 +56,87 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void ShowMemoryFragment(string title, string body, System.Action onClose)
+    public void ShowMemoryFragment(string title, string body, Action onClose)
+    {
+        isModalUIOpen = true;
+        SetGameplayInputEnabled(false);
+        SetGameplayUIVisible(false);
+
+        if (memoryFragmentPanel != null)
+        {
+            memoryFragmentPanel.OpenPanel(title, body, () =>
+            {
+                isModalUIOpen = false;
+                SetGameplayInputEnabled(true);
+                SetGameplayUIVisible(true);
+                onClose?.Invoke();
+            });
+        }
+    }
+
+    public void ShowCodeInputPanel(string panelTitle, Func<string, bool> onSubmit, Action onCancel)
+    {
+        isModalUIOpen = true;
+        SetGameplayInputEnabled(false);
+        SetGameplayUIVisible(false);
+
+        if (codeInputPanel != null)
+        {
+            codeInputPanel.OpenPanel(
+                panelTitle,
+                onSubmit,
+                () =>
+                {
+                    HideCodeInputPanel();
+                    onCancel?.Invoke();
+                }
+            );
+        }
+    }
+
+    public void HideCodeInputPanel()
+    {
+        if (codeInputPanel != null)
+        {
+            codeInputPanel.ClosePanel();
+        }
+
+        isModalUIOpen = false;
+        SetGameplayInputEnabled(true);
+        SetGameplayUIVisible(true);
+    }
+
+    public void SetCodePanelStatus(string message)
+    {
+        if (codeInputPanel != null)
+        {
+            codeInputPanel.SetStatusMessage(message);
+        }
+    }
+
+    private void SetGameplayInputEnabled(bool isEnabled)
     {
         if (playerController != null)
         {
-            playerController.SetMovementEnabled(false);
+            playerController.SetMovementEnabled(isEnabled);
         }
 
         if (mouseLook != null)
         {
-            mouseLook.SetLookEnabled(false);
+            mouseLook.SetLookEnabled(isEnabled);
         }
+    }
 
+    private void SetGameplayUIVisible(bool isVisible)
+    {
         if (interactionPromptUI != null)
         {
-            interactionPromptUI.gameObject.SetActive(false);
+            interactionPromptUI.gameObject.SetActive(isVisible);
         }
 
         if (reticleUI != null)
         {
-            reticleUI.gameObject.SetActive(false);
+            reticleUI.gameObject.SetActive(isVisible);
         }
-
-        memoryFragmentPanel.OpenPanel(title, body, () =>
-        {
-            if (playerController != null)
-            {
-            playerController.SetMovementEnabled(true);
-            }
-
-            if (mouseLook != null)
-            {
-                mouseLook.SetLookEnabled(true);
-            }
-
-            if (interactionPromptUI != null)
-            {
-                interactionPromptUI.gameObject.SetActive(true);
-            }
-
-            if (reticleUI != null)
-            {
-                reticleUI.gameObject.SetActive(true);
-            }
-
-            onClose?.Invoke();
-        });
     }
 }
