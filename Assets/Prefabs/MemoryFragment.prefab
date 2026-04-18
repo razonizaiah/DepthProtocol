@@ -245,6 +245,8 @@ MonoBehaviour:
   fragmentID: Fragment_01
   disableAfterInteraction: 1
   highlightVisual: {fileID: 7522468132428975897}
-  fragmentTitle: Memory Fragment
-  fragmentText: wqejfqweiohfowiehjfoiwehfwoiehfqwoehfqlwefhqleifjhweoirughweiruhgewioughweroiugwehrgiouwehrgiouwerhgewiurhgwieughweiofhoeiwhfwoiehfwioefhjwoipergherilghskljfhskjldhlkjfvhsdjklfhvlkjdfhvdsljkfh
+  fragmentTitle: Maintenance Log
+  fragmentText: 'Recovered access note:
+
+    Pressure lock override code is 4312.'
   uiManager: {fileID: 0}

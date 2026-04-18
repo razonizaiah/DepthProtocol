@@ -183,9 +183,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MouseLook
   playerBody: {fileID: 2451528479021076487}
-  mouseSensitivity: 150
+  orientation: {fileID: 6845030355948812010}
+  mouseSensitivity: 1500
   minPitch: -75
   maxPitch: 75
+  maxStrafeTiltAngle: 3
+  maxMoveTiltAngle: 3
+  tiltSpeed: 2
+  normalFOV: 60
+  sprintFOV: 68
+  fovLerpSpeed: 6
+  interactLookLockDuration: 0.05
+--- !u!1 &7552132568145663857
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6845030355948812010}
+  m_Layer: 0
+  m_Name: Orientation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6845030355948812010
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7552132568145663857}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2451528479021076487}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7677690844655512278
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,6 +239,7 @@ GameObject:
   - component: {fileID: 7481741194749898000}
   - component: {fileID: 4202442136537084009}
   - component: {fileID: 6170637468715349084}
+  - component: {fileID: 8803700879680335874}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -221,6 +261,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 825698522157429192}
+  - {fileID: 6845030355948812010}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4311097340807800518
@@ -323,10 +364,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &6170637468715349084
 MonoBehaviour:
@@ -340,6 +381,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 179b1ce51d5ff4b37b15a8e8e68a5cdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  orientation: {fileID: 0}
+  orientation: {fileID: 6845030355948812010}
   moveSpeed: 6
   verticalSpeed: 3.5
+  sprintMultiplier: 1.8
+  acceleration: 1
+  deceleration: 1
+--- !u!114 &8803700879680335874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7677690844655512278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0554c5dfb8e114778adef9bbc3194565, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractionController
+  cameraTransform: {fileID: 904098570048711923}
+  interactionRange: 3
+  interactionMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  interactionRadius: 0.5
+  mouseLook: {fileID: 0}

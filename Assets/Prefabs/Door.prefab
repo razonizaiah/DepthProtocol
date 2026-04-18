@@ -181,7 +181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RotateDoorMotion
   doorVisual: {fileID: 6372850774813753764}
   closedRotation: {x: 0, y: 0, z: 0}
-  openRotation: {x: 0, y: 90, z: 0}
+  openRotation: {x: 0, y: -90, z: 0}
   rotationSpeed: 180
 --- !u!1 &5719821874841592590
 GameObject:
