@@ -100,4 +100,28 @@ public class CodeDoor : InteractableBase
             doorMotion.SetOpen(isOpen);
         }
     }
+    
+        public void UnlockDoor()
+    {
+        isLocked = false;
+    }
+
+    public void OpenDoor()
+    {
+        isOpen = true;
+        ApplyDoorState();
+    }
+
+    public void CloseDoor()
+    {
+        isOpen = false;
+        ApplyDoorState();
+    }
+
+    public void UnlockAndOpenDoor()
+    {
+        isLocked = false;
+        isOpen = true;
+        ApplyDoorState();
+    }
 }
