@@ -1,112 +1,73 @@
 # Depth Protocol
 
-## Overview
+**A first-person underwater exploration prototype built with Unity and C#.**
 
-**Depth Protocol** is a first-person exploration game built in Unity.
-The game focuses on movement, atmosphere, and environmental interaction inside an underwater cave system with technological ruins.
+Depth Protocol is a personal game development project set in an underwater cave system with mysterious technological ruins. I started it to practice C# programming and learn how to build and connect gameplay systems in Unity.
 
-This project is currently in an early prototype stage.
+The current prototype has a working exploration loop. I'm also developing and testing additional puzzle mechanics in a separate sandbox scene before integrating them into the main level.
 
----
+## Screenshots
 
-## Current Prototype (v0.1)
+| Memory fragment interaction | Code-locked door |
+| --- | --- |
+| ![Memory fragment interaction prompt in the cave](Screenshots/memory-fragment.png) | ![Door access code interface](Screenshots/code-door.png) |
 
-This version includes a **playable loop**:
+| Underwater cave prototype | PuzzleSandbox test scene |
+| --- | --- |
+| ![Underwater cave environment](Screenshots/underwater-cave.png) | ![Unity editor showing the PuzzleSandbox scene and switches](Screenshots/puzzle-sandbox.png) |
 
-1. Player spawns in a cave environment
-2. A locked door blocks the main path
-3. Player explores a side path
-4. Finds a memory fragment containing a code
-5. Returns to the door and unlocks it
-6. Progresses forward
+## Playable Prototype
 
----
+The main scene currently has a complete gameplay loop:
 
-## Features Implemented
+1. Explore an underwater cave and find a locked door.
+2. Search a side path for a memory fragment.
+3. Read the fragment to discover an access code.
+4. Return to the door, enter the code, and unlock the path forward.
 
-### Player Movement
+## Systems I've Built
 
-* Rigidbody-based floating movement (no gravity)
-* Camera-relative WASD controls
-* Vertical movement (up/down)
-* Smooth acceleration and deceleration
-* Sprint system with FOV change
-* Mouse look with pitch clamp and tilt
+**Player movement**
+- Rigidbody-based floating movement with camera-relative WASD controls
+- Vertical movement, smooth acceleration, and sprinting with an FOV change
+- Mouse look with pitch limits and camera tilt
 
----
+**Interaction and UI**
+- SphereCast-based detection of nearby interactable objects
+- Reusable C# interaction components and context-sensitive prompts
+- Memory fragment panels, a reactive reticle, and a code-entry interface
 
-### Interaction System
+**Doors and puzzles**
+- Code-locked doors with keypad-style input
+- Door unlocking logic separated from door movement
+- Puzzle manager and switches for tracking puzzle conditions
 
-* SphereCast-based detection
-* Press **E** to interact
-* UI prompt system
-* Modular interactable system
+## PuzzleSandbox
 
----
+I use a separate `PuzzleSandbox` scene to build and test new puzzle elements before adding them to the main prototype. The scene includes working switches connected to a puzzle manager. Keeping experimental mechanics separate makes it easier to test behavior and troubleshoot issues without changing the main gameplay loop.
 
-### Gameplay Systems
+## Tools and Technical Focus
 
-* Memory fragments that display text and store codes
-* Code-locked door system
-* Keypad-style input panel
-* Modular door motion (hinge-style rotation)
+- **Engine:** Unity
+- **Language:** C#
+- **Other tools:** Unity Physics, ProBuilder, Unity Asset Store environment assets
+- **Skills practiced:** Object-oriented programming, modular gameplay systems, UI interactions, testing, and debugging
 
----
+## Opening the Project
 
-### UI
+1. Clone or download this repository.
+2. Open the project folder in Unity Hub.
+3. Use the Unity Editor version indicated in `ProjectSettings/ProjectVersion.txt`, or a compatible version.
+4. Open the main gameplay scene in `Assets/Scenes/` and enter Play mode.
+5. To explore the puzzle testing environment, open `Assets/Scenes/PuzzleSandbox.unity`.
 
-* Center reticle that reacts to interactables
-* Interaction prompt (object name + action)
-* Memory fragment panel (freezes player)
-* Code input panel
+This is a Unity project rather than a packaged standalone game build.
 
----
+## Project Status
 
-### Environment (Prototype)
-
-* Blockout-based level design
-* Cave environment using asset meshes
-* Basic asset lighting
-
----
-
-## Project Goals
-
-The goal of Depth Protocol is to create a **focused exploration experience** built around:
-
-* Environmental storytelling
-* Atmospheric design
-* Player-driven discovery
-
----
-
-## Current Status
-
-This project is in an **early vertical slice prototype**.
-
-Focus so far:
-
-* Core systems
-* First playable level
-* Basic atmosphere
-
-Next steps:
-
-* Sound design and ambient audio
-* Expanded level design
-* Improved visual identity
-* Gameplay depth (more interactions, puzzles, progression)
-
----
-
-## Tech Stack
-
-* Unity (C#)
-* ProBuilder (level blockout)
-* Unity Asset Store (environment assets)
-
----
+**Early playable prototype.** The memory-fragment and code-door loop works, and puzzle switches are functional in the separate sandbox scene. Future work includes expanded environments, sound, additional puzzles, and visual polish.
 
 ## Author
 
-Izaiah Razon
+**Izaiah Razon**  
+Computer Engineering student, University of Hawaiʻi at Mānoa
